@@ -199,6 +199,24 @@ The goal of this project was to transform a deep learning research notebook (`Tr
 
 ---
 
+### Phase 14: Vercel & Cloud Deployment Configuration
+- **User Prompt:**
+  > *"want to deploy in vercel"*
+- **Technical Context & Architecture Analysis:**
+  - Vercel Serverless Functions have a strict **250MB uncompressed limit** on function bundles. The full TensorFlow library alone exceeds 1.2GB, preventing Python ML models from running inside basic Vercel Lambdas.
+  - Configured a decoupled production architecture:
+    - **Frontend on Vercel**: Global edge CDN with automated CI/CD from GitHub.
+    - **Backend on Render / Railway / Docker**: Python 3.12 Web Service running FastAPI + TensorFlow MobileNetV2 inference engine.
+    - **Resilient Static Bundling**: Bundled the complete 80-plant botanical encyclopedia directly into `frontend/src/data/leaves.json` so the encyclopedia, category filters, and detail pages function with zero downtime on Vercel even when the ML backend is sleeping or spinning up.
+- **Actions Taken:**
+  - Added root `vercel.json` and `frontend/vercel.json` configured with SPA rewrite rules (`/(.*)` → `/index.html`) to prevent 404 errors on direct navigation or page refresh.
+  - Created `frontend/src/api/config.js` to manage `VITE_API_BASE_URL` dynamically across environments.
+  - Updated `Navbar.jsx`, `ClassifierPage.jsx`, `EncyclopediaPage.jsx`, and `LeafDetailPage.jsx` to utilize `getApiUrl` and static fallbacks.
+  - Added containerized deployment assets: `Dockerfile` and `render.yaml` for 1-click backend hosting.
+  - Updated `README.md` with step-by-step Vercel and Render deployment guide.
+
+---
+
 ## 3. Current Directory Structure
 
 ```

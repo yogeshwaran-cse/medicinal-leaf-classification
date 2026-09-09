@@ -64,6 +64,39 @@ The React development server runs at `http://localhost:5173`.
 
 ---
 
+## 🚀 Deployment Guide
+
+### A. Deploy Frontend on Vercel (1-Click)
+
+1. Go to [Vercel Dashboard](https://vercel.com/new) and click **"Add New Project"**.
+2. Select your GitHub repository: `yogeshwaran-cse/medicinal-leaf-classification`.
+3. Vercel automatically detects the root [vercel.json](file:///c:/project%20folder/Medicinal%20Leaf%20Classification/vercel.json):
+   - **Framework Preset**: Vite
+   - **Build Command**: `cd frontend && npm install && npm run build`
+   - **Output Directory**: `frontend/dist`
+4. *(Optional)* Add Environment Variable:
+   - `VITE_API_BASE_URL`: URL of your deployed backend (e.g. `https://ayurleaf-api.onrender.com`).
+5. Click **Deploy**. Your app will be live with full SPA routing!
+   *(Note: The 80-plant botanical encyclopedia and leaf details work 100% instantly on Vercel via static bundling, even before the backend is deployed!)*
+
+### B. Deploy Backend (FastAPI + TensorFlow) on Render / Railway / Docker
+
+Because TensorFlow exceeds Vercel Serverless Function limits (>250MB), the backend is deployed to a container or web service:
+
+**Option 1: Render.com (Free Web Service)**
+1. Go to [Render Dashboard](https://dashboard.render.com/) -> **New Web Service**.
+2. Connect your repository.
+3. Settings:
+   - **Runtime**: `Python 3`
+   - **Build Command**: `pip install -r backend/requirements.txt`
+   - **Start Command**: `uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT`
+4. Copy your Render URL (e.g., `https://ayurleaf-api.onrender.com`) and paste it into your Vercel project's `VITE_API_BASE_URL` environment variable!
+
+**Option 2: Docker / Hugging Face Spaces / Railway**
+Use the included [Dockerfile](file:///c:/project%20folder/Medicinal%20Leaf%20Classification/Dockerfile) for automated container builds.
+
+---
+
 ## Features
 
 1. **Minimalist Botanical Green Aesthetic:**

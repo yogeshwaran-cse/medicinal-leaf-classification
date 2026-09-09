@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Leaf, BookOpen, Info, Sparkles } from 'lucide-react';
+import { getApiUrl } from '../api/config';
 
 export default function Navbar() {
   const [modelOnline, setModelOnline] = useState(false);
 
   useEffect(() => {
-    fetch('/api/health')
+    fetch(getApiUrl('/api/health'))
       .then(res => res.json())
       .then(data => {
         if (data.status === 'online') setModelOnline(true);

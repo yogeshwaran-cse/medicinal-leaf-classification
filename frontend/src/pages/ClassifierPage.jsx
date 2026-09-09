@@ -3,6 +3,7 @@ import ImageUploader from '../components/ImageUploader';
 import SampleGallery from '../components/SampleGallery';
 import PredictionResult from '../components/PredictionResult';
 import { Sparkles, ShieldCheck, Zap, BookOpen } from 'lucide-react';
+import { getApiUrl } from '../api/config';
 
 export default function ClassifierPage() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -22,7 +23,7 @@ export default function ClassifierPage() {
     formData.append('file', file);
 
     try {
-      const response = await fetch('/api/predict', {
+      const response = await fetch(getApiUrl('/api/predict'), {
         method: 'POST',
         body: formData,
       });
@@ -35,7 +36,7 @@ export default function ClassifierPage() {
       setPrediction(data);
     } catch (err) {
       console.error("Classification error:", err);
-      setErrorMsg("Failed to classify image. Ensure the backend server is running and the image is valid.");
+      setErrorMsg("Failed to classify image. Ensure the backend server is running and reachable (verify VITE_API_BASE_URL if deployed).");
     } finally {
       setIsAnalyzing(false);
     }
