@@ -188,6 +188,17 @@ The goal of this project was to transform a deep learning research notebook (`Tr
 
 ---
 
+### Phase 13: Git Repository Initialization & GitHub Remote Sync
+- **User Prompt:**
+  > *"update in github"*
+- **Actions Taken:**
+  - Created a root-level `.gitignore` configured to exclude Python virtual environments (`.venv/`), bytecode caches (`__pycache__/`, `*.pyc`), Node modules (`node_modules/`), production builds (`frontend/dist/`), and raw image dataset archives.
+  - Set default branch to `main` via `git branch -M main`.
+  - Staged all project files and created the initial commit: `Initial commit: AyurLeaf AI medicinal leaf classification web app` (48 files, 9,270 insertions).
+  - Successfully pushed `main` branch to remote origin (`https://github.com/yogeshwaran-cse/medicinal-leaf-classification.git`).
+
+---
+
 ## 3. Current Directory Structure
 
 ```
