@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+*.egg-info/
+dist/
+build/
+
+# Node & Frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Datasets & Heavy Files
+Medicinal Leaf dataset/
+*.tar.gz
+*.zip
+
+# Environment & Configs
+.env
+.env.local
+
+# IDE & OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
