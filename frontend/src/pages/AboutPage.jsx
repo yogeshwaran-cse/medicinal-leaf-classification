@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Cpu, Database, Award, ShieldCheck, HeartHandshake } from 'lucide-react';
 
 export default function AboutPage() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="container about-page">
       <div className="directory-header">
@@ -24,11 +28,11 @@ export default function AboutPage() {
           <div className="stat-label">Medicinal Plant Species</div>
         </div>
         <div className="stat-box glass-card">
-          <div className="stat-number">MobileNetV2</div>
+          <div className="stat-number stat-number-text">MobileNetV2</div>
           <div className="stat-label">Core Neural Architecture</div>
         </div>
         <div className="stat-box glass-card">
-          <div className="stat-number">224×224</div>
+          <div className="stat-number stat-number-text">224×224</div>
           <div className="stat-label">Input Resolution</div>
         </div>
         <div className="stat-box glass-card">
@@ -39,10 +43,14 @@ export default function AboutPage() {
 
       {/* Model Architecture Card */}
       <div className="about-card glass-card">
-        <h3 className="about-section-title" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-          <Cpu size={24} style={{ color: '#34d399' }} />
-          <span>Deep Learning Model & Training Pipeline</span>
-        </h3>
+        <div className="about-card-header">
+          <div className="about-icon-wrapper">
+            <Cpu size={28} />
+          </div>
+          <h3 className="about-section-title">
+            Deep Learning Model & Training Pipeline
+          </h3>
+        </div>
         <p className="about-text">
           The core classification model is built upon <strong>MobileNetV2</strong> with transfer learning, fine-tuned on the Indian Medicinal Leaves Image Dataset. MobileNetV2 uses inverted residual blocks and depthwise separable convolutions to extract fine venation, shape margins, and textural patterns from leaf photos while maintaining high inference speed.
         </p>
@@ -53,10 +61,14 @@ export default function AboutPage() {
 
       {/* Model Format & Serving */}
       <div className="about-card glass-card">
-        <h3 className="about-section-title" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-          <Database size={24} style={{ color: '#34d399' }} />
-          <span>Model Packaging & Client-Side Inference: TensorFlow.js (WebGL)</span>
-        </h3>
+        <div className="about-card-header">
+          <div className="about-icon-wrapper">
+            <Database size={28} />
+          </div>
+          <h3 className="about-section-title">
+            Model Packaging & Client-Side Inference: TensorFlow.js (WebGL)
+          </h3>
+        </div>
         <p className="about-text">
           The trained MobileNetV2 model is converted into <strong>TensorFlow.js Web format</strong>, packaged with dynamic batch input topology and lightweight weight shards.
         </p>
@@ -67,10 +79,14 @@ export default function AboutPage() {
 
       {/* Ayurvedic Knowledge Base */}
       <div className="about-card glass-card">
-        <h3 className="about-section-title" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-          <HeartHandshake size={24} style={{ color: '#34d399' }} />
-          <span>Ayurvedic Wisdom & Botanical Cataloging</span>
-        </h3>
+        <div className="about-card-header">
+          <div className="about-icon-wrapper">
+            <HeartHandshake size={28} />
+          </div>
+          <h3 className="about-section-title">
+            Ayurvedic Wisdom & Botanical Cataloging
+          </h3>
+        </div>
         <p className="about-text">
           Each of the 80 species cataloged in AyurLeaf AI is cross-referenced with classical Ayurvedic treatises including the <em>Charaka Samhita</em>, <em>Sushruta Samhita</em>, and <em>Bhavaprakasha Nighantu</em>.
         </p>

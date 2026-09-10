@@ -384,6 +384,39 @@ The goal of this project was to transform a deep learning research notebook (`Tr
 
 ---
 
+### Phase 23: About Page Stats Counter Mobile Viewport Optimization
+- **User Prompt:**
+  > *"@[c:\project folder\Medicinal Leaf Classification\frontend\src\pages\AboutPage.jsx:L20-L38] Want the elements inside the mobile resolution"*
+- **Root Cause Analysis:**
+  - In `AboutPage.jsx`, `.stats-grid` rendered four stat boxes: `80`, `MobileNetV2`, `224×224`, and `5+`.
+  - In CSS Grid, tracks defined with `1fr` default to `minmax(auto, 1fr)`. For unbroken strings like `"MobileNetV2"`, the min-content width at `font-size: clamp(1.8rem, 4vw, 2.5rem)` (~29px bold) exceeded 175px.
+  - In a 2-column mobile grid, this exceeded the half-screen width and pushed the grid cards beyond the 360px–390px mobile viewport, causing horizontal overflow.
+- **Actions Taken:**
+  - Updated `AboutPage.jsx` to apply `.stat-number-text` to textual stats (`MobileNetV2` and `224×224`).
+  - Refactored `.stats-grid` in `App.css`:
+    - Set grid tracks to `repeat(2, minmax(0, 1fr))` on mobile screens (≤ 640px) with `min-width: 0` and `overflow: hidden` on `.stat-box` to prevent track expansion.
+    - Added fluid typography scaling for `.stat-number` (`clamp(1.35rem, 4.5vw, 1.8rem)`) and `.stat-number-text` (`clamp(0.95rem, 3.2vw, 1.25rem)`), ensuring `"MobileNetV2"` comfortably fits on one line across all mobile resolutions (320px–430px).
+    - Reduced gap (`0.65rem`) and padding (`1rem 0.6rem`) on small viewports so cards stay well within the container side margins.
+  - Verified compilation via `npm run build` in `frontend/` (built in 768ms, 0 errors).
+
+---
+
+### Phase 24: About Page Icon Size Enlargement & Fixed Bottom Nav Bar Fix
+- **User Prompt:**
+  > *"@[c:\project folder\Medicinal Leaf Classification\frontend\src\pages\AboutPage.jsx:L40-L81] increase the icon size and fix the fixed bottom nav bar in about page"*
+- **Actions Taken:**
+  - **Enlarged Section Icons (`AboutPage.jsx` & `App.css`):**
+    - Wrapped `Cpu`, `Database`, and `HeartHandshake` icons in a dedicated `.about-card-header` and `.about-icon-wrapper`.
+    - Increased icon size from `24` to `28` (desktop) and `24` (mobile).
+    - Styled `.about-icon-wrapper` as a 52px × 52px (44px on mobile) emerald glassmorphic badge with gradient background `linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(4, 120, 87, 0.3) 100%)`, emerald border, and subtle glow.
+    - Added `useEffect` with `window.scrollTo(0, 0)` on `AboutPage.jsx` for clean top-of-page entry.
+  - **Fixed Mobile Bottom Navigation Bar (`App.css`):**
+    - Updated `.mobile-bottom-nav` with `z-index: 9999`, `pointer-events: auto`, and `box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.65)` to ensure it reliably renders above all stacking contexts (including `.glass-card` elements with `backdrop-filter`).
+    - Added `padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px)) !important;` on `.about-page` for screens ≤ 768px, ensuring the bottom cards and footer content are never obscured by the fixed bottom navigation bar.
+  - Rebuilt production bundle via `npm run build` in `frontend/` (built in 812ms, 0 errors).
+
+---
+
 ## 3. Current Directory Structure
 
 ```

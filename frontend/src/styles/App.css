@@ -304,16 +304,18 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: calc(3.6rem + env(safe-area-inset-bottom, 0px));
+    width: 100%;
+    height: calc(3.8rem + env(safe-area-inset-bottom, 0px));
     padding-bottom: env(safe-area-inset-bottom, 0px);
-    background: rgba(6, 24, 17, 0.94);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    background: rgba(6, 24, 17, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-top: 1px solid var(--border-active);
-    z-index: 95;
+    z-index: 9999;
     justify-content: space-around;
     align-items: center;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.65);
+    pointer-events: auto;
   }
 
   .bottom-nav-item {
@@ -1486,12 +1488,59 @@
 .about-card {
   padding: clamp(1.25rem, 4vw, 2.5rem);
   margin-bottom: 1.75rem;
+  box-sizing: border-box;
+}
+
+.about-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.15rem;
+}
+
+.about-icon-wrapper {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(4, 120, 87, 0.3) 100%);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #34d399;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.2);
+}
+
+.about-icon-wrapper svg {
+  width: 28px;
+  height: 28px;
+  color: #34d399;
 }
 
 .about-section-title {
-  font-size: clamp(1.25rem, 3.5vw, 1.6rem);
-  margin-bottom: 0.85rem;
+  font-size: clamp(1.15rem, 3.2vw, 1.5rem);
+  margin-bottom: 0;
   color: #ffffff;
+  line-height: 1.3;
+}
+
+@media (max-width: 640px) {
+  .about-card-header {
+    gap: 0.75rem;
+    margin-bottom: 0.95rem;
+  }
+
+  .about-icon-wrapper {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-sm);
+  }
+
+  .about-icon-wrapper svg {
+    width: 24px;
+    height: 24px;
+  }
 }
 
 .about-text {
@@ -1503,15 +1552,11 @@
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
   margin: 1.75rem 0;
-}
-
-@media (max-width: 500px) {
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .stat-box {
@@ -1520,13 +1565,28 @@
   border-radius: var(--radius-md);
   padding: 1.25rem 1rem;
   text-align: center;
+  min-width: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .stat-number {
-  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-size: clamp(1.6rem, 3.5vw, 2.5rem);
   font-weight: 800;
   font-family: var(--font-display);
   color: #34d399;
+  line-height: 1.15;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+.stat-number.stat-number-text {
+  font-size: clamp(1.2rem, 2.8vw, 1.85rem);
+  letter-spacing: -0.01em;
 }
 
 .stat-label {
@@ -1534,7 +1594,56 @@
   color: var(--text-dim);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-top: 0.25rem;
+  margin-top: 0.35rem;
+  line-height: 1.35;
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+    margin: 1.25rem 0;
+  }
+
+  .stat-box {
+    padding: 1rem 0.6rem;
+  }
+
+  .stat-number {
+    font-size: clamp(1.35rem, 4.5vw, 1.8rem);
+  }
+
+  .stat-number.stat-number-text {
+    font-size: clamp(0.95rem, 3.2vw, 1.25rem);
+  }
+
+  .stat-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.03em;
+  }
+}
+
+@media (max-width: 360px) {
+  .stats-grid {
+    gap: 0.5rem;
+  }
+
+  .stat-box {
+    padding: 0.75rem 0.4rem;
+  }
+
+  .stat-number {
+    font-size: 1.2rem;
+  }
+
+  .stat-number.stat-number-text {
+    font-size: 0.88rem;
+  }
+
+  .stat-label {
+    font-size: 0.62rem;
+  }
 }
 
 /* ==========================================================================
@@ -1596,5 +1705,9 @@
   .details-page {
     padding-left: clamp(1.25rem, 5vw, 2rem) !important;
     padding-right: clamp(1.25rem, 5vw, 2rem) !important;
+  }
+
+  .about-page {
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px)) !important;
   }
 }
