@@ -362,6 +362,28 @@ The goal of this project was to transform a deep learning research notebook (`Tr
 
 ---
 
+### Phase 22: Mobile Live Camera Stream & Mobile Container Side Margins
+- **User Prompt:**
+  > *"want some changes in mobile view:*
+  > *- want to clickable button for camera button, it works fine on web, but when we use it in mobile it goes to open the images instead of camera*
+  > *- want to add some margins from both sides to the container in Encyclopedia and about page"*
+- **Root Cause Analysis:**
+  - **Camera Button:** `ImageUploader.jsx` previously checked `isTouchDevice()` and forwarded mobile taps to `<input type="file" capture="environment">`. On mobile browsers (Chrome/Safari), this frequently defaulted to opening the system file/gallery chooser ("Images/Files") rather than launching the camera viewfinder. On web/desktop, it opened the live webcam modal with video stream and snap button.
+  - **Container Margins on Encyclopedia & About Pages:** `.directory-page` and `.about-page` used shorthand `padding: clamp(...) 0 4rem;`. The `0` horizontal value was unintentionally overriding `.container`'s left and right padding, causing the search bar, category pills, catalog cards, and about cards to press directly against the mobile screen borders without margin.
+- **Actions Taken:**
+  - **Unified Live Camera Experience (`ImageUploader.jsx`):**
+    - Updated `handleCameraClick` to directly invoke `openCamera()`, launching the live video viewfinder modal on mobile devices just like on desktop.
+    - Added rear camera preference (`facingMode: { ideal: 'environment' }`) with automated fallback to any video input.
+    - Added a camera flip button (`<RefreshCw />`) in the modal header allowing mobile users to switch between rear and front cameras.
+    - Ensured inline playback attributes (`autoPlay playsInline muted`) for smooth mobile video rendering.
+  - **Restored & Enhanced Mobile Container Margins (`App.css` & `index.css`):**
+    - Changed `.directory-page`, `.about-page`, and `.details-page` to declare vertical padding only (`padding-top: clamp(...)` and `padding-bottom: 4rem`), preserving horizontal container padding.
+    - Added explicit mobile view side padding (`padding-left: clamp(1.25rem, 5vw, 2rem) !important; padding-right: clamp(1.25rem, 5vw, 2rem) !important;`) on screens ≤ 768px and ≤ 480px.
+    - Updated `.container` in `index.css` to maintain `padding: 0 1.25rem` on mobile.
+  - Rebuilt production assets via `npm run build` in `frontend/` (built in 973ms, 0 errors).
+
+---
+
 ## 3. Current Directory Structure
 
 ```

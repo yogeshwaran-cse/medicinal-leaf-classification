@@ -1,17 +1,13 @@
 import React, { useState, useRef } from 'react';
-import { Upload, Camera, X, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { Upload, Camera, X, Image as ImageIcon, Loader2, RefreshCw } from 'lucide-react';
 
 export default function ImageUploader({ onImageSelected, previewUrl, onClearPreview, isAnalyzing }) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [facingMode, setFacingMode] = useState('environment');
   const fileInputRef = useRef(null);
-  const nativeCameraInputRef = useRef(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-
-  const isTouchDevice = () => {
-    return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  };
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -39,39 +35,67 @@ export default function ImageUploader({ onImageSelected, previewUrl, onClearPrev
     }
   };
 
-  // Camera handling
-  const handleCameraClick = () => {
-    // If mobile / touch device, prioritize high-res native camera app
-    if (isTouchDevice() && nativeCameraInputRef.current) {
-      nativeCameraInputRef.current.click();
-    } else {
-      // Desktop / laptop webcam stream modal
-      openWebcam();
+  // Start video stream with specified camera facing mode
+  const startStream = async (mode = 'environment') => {
+    if (videoRef.current && videoRef.current.srcObject) {
+      videoRef.current.srcObject.getTracks().forEach(track => track.stop());
+      videoRef.current.srcObject = null;
+    }
+
+    let stream = null;
+    try {
+      // Prefer rear camera on smartphones (macro lens & autofocus)
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: mode },
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        }
+      });
+    } catch (err) {
+      console.warn(`Camera mode ${mode} failed, falling back to any video device:`, err);
+      stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    }
+
+    if (videoRef.current && stream) {
+      videoRef.current.srcObject = stream;
+      try {
+        await videoRef.current.play();
+      } catch (playErr) {
+        console.log("Video play handled:", playErr);
+      }
     }
   };
 
-  const openWebcam = async () => {
+  // Open camera modal (works on both mobile and desktop)
+  const openCamera = async () => {
     setIsCameraOpen(true);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment', width: { ideal: 640 } }
-      });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
+      await startStream(facingMode);
     } catch (err) {
       console.error("Camera access error:", err);
-      // If webcam fails (e.g. desktop without webcam), fallback to file input
-      alert("Unable to access live webcam. You can upload a leaf photograph instead.");
       setIsCameraOpen(false);
+      alert("Unable to access camera: " + (err.message || "Please check browser camera permissions."));
     }
   };
 
   const closeCamera = () => {
     if (videoRef.current && videoRef.current.srcObject) {
       videoRef.current.srcObject.getTracks().forEach(track => track.stop());
+      videoRef.current.srcObject = null;
     }
     setIsCameraOpen(false);
+  };
+
+  // Switch between rear and front cameras (especially useful on phones)
+  const toggleFacingMode = async () => {
+    const nextMode = facingMode === 'environment' ? 'user' : 'environment';
+    setFacingMode(nextMode);
+    try {
+      await startStream(nextMode);
+    } catch (err) {
+      console.warn("Failed to switch camera:", err);
+    }
   };
 
   const capturePhoto = () => {
@@ -126,22 +150,12 @@ export default function ImageUploader({ onImageSelected, previewUrl, onClearPrev
           onDrop={handleDrop}
           onClick={() => fileInputRef.current && fileInputRef.current.click()}
         >
-          {/* Standard File Input */}
+          {/* File Picker Input */}
           <input
             type="file"
             ref={fileInputRef}
             onChange={handleFileChange}
             accept="image/*"
-            style={{ display: 'none' }}
-          />
-
-          {/* Native Smartphone Camera Input (Opens native camera app with autofocus) */}
-          <input
-            type="file"
-            ref={nativeCameraInputRef}
-            onChange={handleFileChange}
-            accept="image/*"
-            capture="environment"
             style={{ display: 'none' }}
           />
 
@@ -165,7 +179,7 @@ export default function ImageUploader({ onImageSelected, previewUrl, onClearPrev
             <button
               type="button"
               className="btn btn-outline dropzone-btn"
-              onClick={handleCameraClick}
+              onClick={openCamera}
             >
               <Camera size={18} />
               <span>Snap with Camera</span>
@@ -174,22 +188,44 @@ export default function ImageUploader({ onImageSelected, previewUrl, onClearPrev
         </div>
       )}
 
-      {/* Hidden Canvas for Live Webcam Snapshots */}
+      {/* Hidden Canvas for Camera Capture */}
       <canvas ref={canvasRef} style={{ display: 'none' }} />
 
-      {/* Live Webcam Stream Modal (for Desktop or WebCam) */}
+      {/* Live Camera Viewfinder Modal (Mobile & Desktop) */}
       {isCameraOpen && (
         <div className="modal-backdrop" onClick={closeCamera}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3 style={{ color: '#fff', fontSize: '1.15rem', fontWeight: 700 }}>Live Leaf Camera</h3>
-              <button className="btn-icon-sm" onClick={closeCamera} aria-label="Close camera">
-                <X size={18} />
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <button
+                  type="button"
+                  className="btn-icon-sm"
+                  onClick={toggleFacingMode}
+                  title="Switch camera (Rear / Front)"
+                  aria-label="Switch camera"
+                >
+                  <RefreshCw size={18} />
+                </button>
+                <button
+                  type="button"
+                  className="btn-icon-sm"
+                  onClick={closeCamera}
+                  aria-label="Close camera"
+                >
+                  <X size={18} />
+                </button>
+              </div>
             </div>
             
             <div className="modal-video-wrapper">
-              <video ref={videoRef} autoPlay playsInline muted className="modal-video" />
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                className="modal-video"
+              />
             </div>
 
             <div className="modal-actions">

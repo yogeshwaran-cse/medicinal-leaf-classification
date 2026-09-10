@@ -984,7 +984,8 @@
    8. LEAF DETAILS PAGE
    ========================================================================== */
 .details-page {
-  padding: clamp(1.5rem, 4vw, 2.5rem) 0 4rem;
+  padding-top: clamp(1.5rem, 4vw, 2.5rem);
+  padding-bottom: 4rem;
 }
 
 .back-link {
@@ -1204,7 +1205,8 @@
    9. ENCYCLOPEDIA / DIRECTORY PAGE
    ========================================================================== */
 .directory-page {
-  padding: clamp(2rem, 4vw, 3rem) 0 4rem;
+  padding-top: clamp(2rem, 4vw, 3rem);
+  padding-bottom: 4rem;
 }
 
 .directory-header {
@@ -1477,7 +1479,8 @@
    10. ABOUT PAGE
    ========================================================================== */
 .about-page {
-  padding: clamp(2rem, 4vw, 3rem) 0 4rem;
+  padding-top: clamp(2rem, 4vw, 3rem);
+  padding-bottom: 4rem;
 }
 
 .about-card {
@@ -1580,5 +1583,18 @@
     flex-direction: column;
     gap: 0.75rem;
     text-align: center;
+  }
+}
+
+/* ==========================================================================
+   12. MOBILE VIEW CONTAINER MARGINS (ENCYCLOPEDIA & ABOUT)
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* Generous side margins so cards and search bars don't touch mobile screen edges */
+  .directory-page,
+  .about-page,
+  .details-page {
+    padding-left: clamp(1.25rem, 5vw, 2rem) !important;
+    padding-right: clamp(1.25rem, 5vw, 2rem) !important;
   }
 }
