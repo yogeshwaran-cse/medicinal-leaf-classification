@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import { ArrowLeft, Leaf, CheckCircle2, AlertCircle, Beaker, ShieldAlert, Sparkles, BookOpen } from 'lucide-react';
-import { getApiUrl } from '../api/config';
 import staticLeavesRaw from '../data/leaves.json';
 
 export default function LeafDetailPage() {
@@ -20,36 +19,25 @@ export default function LeafDetailPage() {
     setLoading(true);
     setError(null);
 
-    const findStaticLeaf = () => {
-      if (!id) return null;
-      const target = id.toLowerCase().replace(/ /g, '_');
-      return staticLeavesRaw.find(l => 
-        (l.id && l.id.toLowerCase().replace(/ /g, '_') === target) ||
-        l.class_name.toLowerCase().replace(/ /g, '_') === target ||
-        l.class_name.toLowerCase() === id.toLowerCase()
-      );
-    };
+    if (!id) {
+      setError("No leaf ID specified");
+      setLoading(false);
+      return;
+    }
 
-    fetch(getApiUrl(`/api/leaves/${id}`))
-      .then(res => {
-        if (!res.ok) throw new Error("Leaf not found on server");
-        return res.json();
-      })
-      .then(data => {
-        setLeaf(data);
-        setLoading(false);
-      })
-      .catch(() => {
-        // Fallback to static bundled leaf data
-        const staticMatch = findStaticLeaf();
-        if (staticMatch) {
-          setLeaf({ id, ...staticMatch });
-          setLoading(false);
-        } else {
-          setError("Leaf profile not found");
-          setLoading(false);
-        }
-      });
+    const target = id.toLowerCase().replace(/ /g, '_');
+    const matched = staticLeavesRaw.find(l => 
+      (l.id && l.id.toLowerCase().replace(/ /g, '_') === target) ||
+      l.class_name.toLowerCase().replace(/ /g, '_') === target ||
+      l.class_name.toLowerCase() === id.toLowerCase()
+    );
+
+    if (matched) {
+      setLeaf({ id, ...matched });
+    } else {
+      setError("Leaf profile not found");
+    }
+    setLoading(false);
   }, [id]);
 
   if (loading) {

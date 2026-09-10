@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Search, X, BookOpen, Filter } from 'lucide-react';
 import LeafCard from '../components/LeafCard';
-import { getApiUrl } from '../api/config';
 import staticLeavesRaw from '../data/leaves.json';
 
 const staticLeaves = staticLeavesRaw.map(leaf => ({
@@ -12,36 +11,11 @@ const staticLeaves = staticLeavesRaw.map(leaf => ({
 const staticCategories = ["All", ...Array.from(new Set(staticLeaves.map(l => l.category).filter(Boolean)))];
 
 export default function EncyclopediaPage() {
-  const [leaves, setLeaves] = useState(staticLeaves);
-  const [categories, setCategories] = useState(staticCategories);
+  const [leaves] = useState(staticLeaves);
+  const [categories] = useState(staticCategories);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    // Fetch categories from backend, fallback to static
-    fetch(getApiUrl('/api/categories'))
-      .then(res => res.json())
-      .then(data => {
-        if (data.categories) setCategories(data.categories);
-      })
-      .catch(() => setCategories(staticCategories));
-
-    // Fetch leaves from backend, fallback to static
-    fetch(getApiUrl('/api/leaves'))
-      .then(res => res.json())
-      .then(data => {
-        if (data.leaves && data.leaves.length > 0) {
-          setLeaves(data.leaves);
-        }
-        setLoading(false);
-      })
-      .catch(() => {
-        // Fallback to static bundled leaves for standalone Vercel hosting
-        setLeaves(staticLeaves);
-        setLoading(false);
-      });
-  }, []);
+  const loading = false;
 
   // Filter leaves based on search and category
   const filteredLeaves = leaves.filter(leaf => {

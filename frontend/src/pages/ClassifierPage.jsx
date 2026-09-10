@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ImageUploader from '../components/ImageUploader';
 import SampleGallery from '../components/SampleGallery';
 import PredictionResult from '../components/PredictionResult';
 import { Sparkles, ShieldCheck, Zap, BookOpen } from 'lucide-react';
-import { getApiUrl } from '../api/config';
+import { classifyImage, initClassifier } from '../services/leafClassifier';
 
 export default function ClassifierPage() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -12,31 +12,28 @@ export default function ClassifierPage() {
   const [prediction, setPrediction] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
+  // Preload model on initial mount for zero-wait subsequent predictions
+  useEffect(() => {
+    initClassifier().catch(err => {
+      console.warn("Background model preload notice:", err);
+    });
+  }, []);
+
   const handleImageSelected = async (file, customPreviewUrl = null) => {
+    const preview = customPreviewUrl || URL.createObjectURL(file);
     setSelectedFile(file);
-    setPreviewUrl(customPreviewUrl || URL.createObjectURL(file));
+    setPreviewUrl(preview);
     setPrediction(null);
     setErrorMsg(null);
     setIsAnalyzing(true);
 
-    const formData = new FormData();
-    formData.append('file', file);
-
     try {
-      const response = await fetch(getApiUrl('/api/predict'), {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error(`Server returned ${response.status}: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      setPrediction(data);
+      // Direct client-side inference using TensorFlow.js WebGL
+      const result = await classifyImage(customPreviewUrl || file);
+      setPrediction(result);
     } catch (err) {
       console.error("Classification error:", err);
-      setErrorMsg("Failed to classify image. Ensure the backend server is running and reachable (verify VITE_API_BASE_URL if deployed).");
+      setErrorMsg(`Failed to classify image locally: ${err.message || 'Check browser console for details'}`);
     } finally {
       setIsAnalyzing(false);
     }

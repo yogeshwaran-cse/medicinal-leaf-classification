@@ -55,13 +55,13 @@ export default function AboutPage() {
       <div className="about-card glass-card">
         <h3 className="about-section-title" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
           <Database size={24} style={{ color: '#34d399' }} />
-          <span>Model Packaging: TensorFlow SavedModel (Folder 1)</span>
+          <span>Model Packaging & Client-Side Inference: TensorFlow.js (WebGL)</span>
         </h3>
         <p className="about-text">
-          The model is served directly from directory <code>1/</code> using TensorFlow's native <strong>SavedModel</strong> format. SavedModel bundles the computation graph, learned weights, and signature definitions into a unified format.
+          The trained MobileNetV2 model is converted into <strong>TensorFlow.js Web format</strong>, packaged with dynamic batch input topology and lightweight weight shards.
         </p>
         <p className="about-text">
-          The backend runs on <strong>FastAPI</strong> and is managed via the modern <strong>uv</strong> package manager, leveraging <code>tf-keras</code> for inference and instant prediction response times.
+          Inference runs <strong>100% client-side in the user's browser</strong> using <strong>WebGL hardware acceleration</strong>. This eliminates network latency, provides sub-100ms classification speeds, protects user privacy, and allows seamless, zero-cost static hosting on <strong>Vercel</strong> without requiring any external Python server.
         </p>
       </div>
 

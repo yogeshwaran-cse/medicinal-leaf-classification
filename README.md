@@ -8,52 +8,32 @@ A full-stack AI web application for identifying 80 species of Indian medicinal p
 
 ```
 Medicinal Leaf Classification/
-├── saved_models/                  # Model versions directory
-│   └── model_1.keras              # Native modern Keras model (version 1)
+├── saved_models/                  # Trained model directory
+│   └── model_1.keras              # MobileNetV2 Keras model
+├── convert_model_to_tfjs.py       # Converter script from .keras to TensorFlow.js graph model
 ├── Training.ipynb                 # Jupyter notebook used to train MobileNetV2
-├── backend/                       # Python backend managed with uv
-│   ├── app/
-│   │   ├── __init__.py
-│   │   ├── main.py                # FastAPI endpoints & static SPA server
-│   │   ├── model.py               # Keras inference engine loading .keras model
-│   │   ├── database.py            # Botanical knowledge base query manager
-│   │   └── data/
-│   │       └── leaves.json        # Detailed profiles for all 80 plant species
-│   ├── pyproject.toml             # uv configuration
-│   ├── requirements.txt           # Python dependencies
-│   └── run.py                     # Backend server launcher (port 8000)
+├── vercel.json                    # Vercel deployment configuration
 ├── frontend/                      # React frontend built with Vite & Vanilla CSS
 │   ├── public/
-│   │   └── samples/               # Pre-bundled sample leaves (Tulsi, Neem, Mint, etc.)
+│   │   ├── model/                 # TensorFlow.js WebGL graph model & weight shards
+│   │   └── samples/               # Authentic test sample leaves (Tulsi, Neem, Betel, Doddpathre)
 │   ├── src/
-│   │   ├── components/            # Navbar, ImageUploader, PredictionResult, LeafCard, etc.
+│   │   ├── components/            # Navbar, ImageUploader, PredictionResult, LeafCard, Footer
 │   │   ├── pages/                 # ClassifierPage, LeafDetailPage, EncyclopediaPage, AboutPage
+│   │   ├── services/              # Client-side TensorFlow.js WebGL classifier engine
+│   │   ├── data/                  # 80-species Ayurvedic knowledge base (leaves.json)
 │   │   ├── styles/                # Botanical Green CSS & design tokens
 │   │   ├── App.jsx                # Multi-page React Router
 │   │   └── main.jsx
 │   ├── package.json
-│   └── vite.config.js             # Vite config with API proxy to port 8000
+│   └── vite.config.js             # Vite configuration
 ```
 
 ---
 
 ## Quick Start
 
-### 1. Backend Setup & Run (with `uv`)
-
-```bash
-# Create virtual environment with Python 3.12 (if not already created)
-uv venv .venv --python 3.12
-
-# Install dependencies using uv
-uv pip install -r backend/requirements.txt --python .venv/Scripts/python.exe
-
-# Run backend server
-.venv\Scripts\python.exe backend/run.py
-```
-The backend starts at `http://127.0.0.1:8000`.
-
-### 2. Frontend Setup & Run (React + Vite)
+### Frontend Setup & Run (React + Vite)
 
 ```bash
 cd frontend
@@ -61,39 +41,6 @@ npm install
 npm run dev
 ```
 The React development server runs at `http://localhost:5173`.
-
----
-
-## 🚀 Deployment Guide
-
-### A. Deploy Frontend on Vercel (1-Click)
-
-1. Go to [Vercel Dashboard](https://vercel.com/new) and click **"Add New Project"**.
-2. Select your GitHub repository: `yogeshwaran-cse/medicinal-leaf-classification`.
-3. Vercel automatically detects the root [vercel.json](file:///c:/project%20folder/Medicinal%20Leaf%20Classification/vercel.json):
-   - **Framework Preset**: Vite
-   - **Build Command**: `cd frontend && npm install && npm run build`
-   - **Output Directory**: `frontend/dist`
-4. *(Optional)* Add Environment Variable:
-   - `VITE_API_BASE_URL`: URL of your deployed backend (e.g. `https://ayurleaf-api.onrender.com`).
-5. Click **Deploy**. Your app will be live with full SPA routing!
-   *(Note: The 80-plant botanical encyclopedia and leaf details work 100% instantly on Vercel via static bundling, even before the backend is deployed!)*
-
-### B. Deploy Backend (FastAPI + TensorFlow) on Render / Railway / Docker
-
-Because TensorFlow exceeds Vercel Serverless Function limits (>250MB), the backend is deployed to a container or web service:
-
-**Option 1: Render.com (Free Web Service)**
-1. Go to [Render Dashboard](https://dashboard.render.com/) -> **New Web Service**.
-2. Connect your repository.
-3. Settings:
-   - **Runtime**: `Python 3`
-   - **Build Command**: `pip install -r backend/requirements.txt`
-   - **Start Command**: `uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT`
-4. Copy your Render URL (e.g., `https://ayurleaf-api.onrender.com`) and paste it into your Vercel project's `VITE_API_BASE_URL` environment variable!
-
-**Option 2: Docker / Hugging Face Spaces / Railway**
-Use the included [Dockerfile](file:///c:/project%20folder/Medicinal%20Leaf%20Classification/Dockerfile) for automated container builds.
 
 ---
 

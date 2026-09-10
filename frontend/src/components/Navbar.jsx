@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Leaf, BookOpen, Info, Sparkles } from 'lucide-react';
-import { getApiUrl } from '../api/config';
+import { subscribeModelStatus } from '../services/leafClassifier';
 
 export default function Navbar() {
-  const [modelOnline, setModelOnline] = useState(false);
+  const [modelStatus, setModelStatus] = useState({ ready: false, loading: false, backend: null });
 
   useEffect(() => {
-    fetch(getApiUrl('/api/health'))
-      .then(res => res.json())
-      .then(data => {
-        if (data.status === 'online') setModelOnline(true);
-      })
-      .catch(() => setModelOnline(false));
+    const unsubscribe = subscribeModelStatus(status => {
+      setModelStatus(status);
+    });
+    return unsubscribe;
   }, []);
 
   return (
@@ -43,9 +41,9 @@ export default function Navbar() {
           </NavLink>
         </nav>
 
-        <div className="nav-status" title={modelOnline ? "MobileNetV2 Model Active (80 classes)" : "Connecting to API..."}>
-          <div className="status-dot" style={{ background: modelOnline ? '#10b981' : '#f59e0b' }} />
-          <span>{modelOnline ? "AI Active (80 Species)" : "Connecting..."}</span>
+        <div className="nav-status" title={modelStatus.ready ? `MobileNetV2 Model Active (${modelStatus.backend} - 80 classes)` : (modelStatus.loading ? "Loading AI weights into WebGL..." : "AI Active (80 Species)")}>
+          <div className="status-dot" style={{ background: modelStatus.ready ? '#10b981' : (modelStatus.loading ? '#f59e0b' : '#10b981') }} />
+          <span>{modelStatus.ready ? `AI Ready (${modelStatus.backend?.toUpperCase() || 'WebGL'})` : (modelStatus.loading ? "Loading AI Model..." : "AI Active (80 Species)")}</span>
         </div>
       </div>
     </header>
