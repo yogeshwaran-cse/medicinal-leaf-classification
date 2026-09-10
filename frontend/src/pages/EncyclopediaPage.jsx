@@ -59,57 +59,44 @@ export default function EncyclopediaPage() {
           <input
             type="text"
             className="search-input"
-            placeholder="Search by leaf name (e.g. Astma_weed, Doddpathre, Citron lime), scientific name..."
+            placeholder="Search leaves, botanical name, or health remedy..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
-              style={{
-                position: 'absolute',
-                right: '1.25rem',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                background: 'none',
-                border: 'none',
-                color: 'var(--text-dim)',
-                cursor: 'pointer'
-              }}
+              className="search-clear-btn"
+              aria-label="Clear search"
             >
               <X size={18} />
             </button>
           )}
         </div>
 
-        {/* Category Filter Pills */}
-        <div className="category-pills">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              className={`category-pill ${selectedCategory === cat ? 'active' : ''}`}
-              onClick={() => setSelectedCategory(cat)}
-            >
-              {cat}
-            </button>
-          ))}
+        {/* Category Filter Pills (Horizontal swipe on mobile) */}
+        <div className="category-pills-container">
+          <div className="category-pills">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                className={`category-pill ${selectedCategory === cat ? 'active' : ''}`}
+                onClick={() => setSelectedCategory(cat)}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Results Counter */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: '1.5rem',
-        color: 'var(--text-dim)',
-        fontSize: '0.9rem'
-      }}>
-        <span>
+      {/* Results Counter Bar */}
+      <div className="directory-meta-bar">
+        <span className="directory-counter">
           Showing <strong>{filteredLeaves.length}</strong> of {leaves.length} medicinal species
         </span>
         {selectedCategory !== "All" && (
-          <span className="badge">
+          <span className="badge category-filter-badge">
             Category: {selectedCategory}
           </span>
         )}
@@ -117,7 +104,7 @@ export default function EncyclopediaPage() {
 
       {/* Grid of Leaf Cards */}
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '4rem 0' }}>
+        <div className="loading-container">
           <div className="status-dot" style={{ width: '14px', height: '14px', margin: '0 auto 1rem auto' }} />
           <p style={{ color: 'var(--text-dim)' }}>Loading Encyclopedia Data...</p>
         </div>
@@ -128,7 +115,7 @@ export default function EncyclopediaPage() {
           ))}
         </div>
       ) : (
-        <div className="glass-card" style={{ textAlign: 'center', padding: '4rem 2rem' }}>
+        <div className="glass-card empty-search-card">
           <BookOpen size={42} style={{ color: 'var(--text-dim)', margin: '0 auto 1rem auto' }} />
           <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>No Medicinal Leaves Found</h3>
           <p style={{ color: 'var(--text-dim)', marginBottom: '1.5rem' }}>

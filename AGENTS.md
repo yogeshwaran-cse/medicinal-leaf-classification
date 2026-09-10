@@ -328,7 +328,37 @@ The goal of this project was to transform a deep learning research notebook (`Tr
     - 🗑️ `frontend/src/api/` (`config.js`)
   - Optimized `EncyclopediaPage.jsx` and `LeafDetailPage.jsx` to synchronously access the bundled 80-species botanical dataset with zero failed fetch attempts.
   - Cleaned `frontend/vite.config.js` to remove redundant `/api` proxy.
-  - Verified compilation with `npm run build` in `frontend/` (built in 750ms, 0 errors).
+---
+
+### Phase 21: Mobile-First Responsive UI Redesign & Desktop Layout Parity
+- **User Prompt:**
+  > *"want to Design this UI that is suitable for mobile phones also retains the web page for web"*
+- **Rationale & Objectives:**
+  - Provide a fluid, native-app-like experience for users browsing on smartphones (iOS/Android) without compromising or altering the multi-column layout, sticky header, and hover interactions on desktop screens.
+- **Actions Taken:**
+  - **Dual-Mode Navigation Architecture (`Navbar.jsx`):**
+    - Retained the horizontal desktop navigation bar (`Classifier`, `Encyclopedia (80)`, `About`) and `AI Ready (WEBGL)` pill on screens > 768px.
+    - On mobile (≤ 768px):
+      - Compact top bar with brand logo, status dot, and animated hamburger toggle (`Menu` / `X`).
+      - Sliding glassmorphic drawer menu (`.mobile-drawer-content`) with high-contrast route links, icons, route descriptions, and local inference engine specs. Automatically locks background scroll when open.
+      - Fixed native app **Mobile Bottom Navigation Bar** (`.mobile-bottom-nav`) with thumb-accessible tabs (**Classify**, **80 Herbs**, **About**), glowing active pills, and safe-area padding (`env(safe-area-inset-bottom)`).
+  - **Smartphone Camera & Touch Optimization (`ImageUploader.jsx`):**
+    - Added direct smartphone camera capture `<input type="file" accept="image/*" capture="environment" />` allowing phone users to directly use their device's native camera with autofocus and macro lens.
+    - Maintained live webcam streaming modal for desktop users.
+    - Touch-optimized dropzone buttons with 44px+ height and active tap feedback.
+  - **Fluid Typography & Smooth Auto-Scroll (`ClassifierPage.jsx` & `App.css`):**
+    - Implemented fluid typography using CSS `clamp()` for hero titles (`clamp(1.85rem, 5vw, 3rem)`), directory headings, and leaf detail titles.
+    - On mobile, automatically smooth-scrolls down to the prediction results when classification finishes so users immediately see detection results without manual scrolling.
+    - Stacked prediction result action buttons into full-width thumb targets on mobile screens.
+  - **Horizontal Swipeable Category Pills (`EncyclopediaPage.jsx`):**
+    - Converted category filter pills on mobile into a horizontal swipe strip with momentum scrolling (`-webkit-overflow-scrolling: touch; scrollbar-width: none`), matching mobile app design conventions.
+    - Set search input font size to `16px` to prevent iOS Safari from automatically zooming into the page on focus.
+    - Made leaf card grid responsive with `minmax(min(100%, 270px), 1fr)`.
+  - **Leaf Details Page & Safe-Area Footer:**
+    - Responsive hero padding (1.25rem on mobile vs 2.5rem on desktop).
+    - 2-column regional language names grid on mobile.
+    - Safe-area bottom padding in footer (`calc(5rem + env(safe-area-inset-bottom, 0px))`) ensuring the fixed mobile bottom bar does not overlap copyright or footer links.
+  - Rebuilt production assets via `npm run build` in `frontend/` (compiled cleanly with 0 errors).
 
 ---
 

@@ -46,15 +46,16 @@ The React development server runs at `http://localhost:5173`.
 
 ## Features
 
-1. **Minimalist Botanical Green Aesthetic:**
+1. **Mobile-First Responsive Design with Web Desktop Parity:**
    - Tailored palette (Forest, Emerald, Sage, Mint, Glassmorphism).
-   - Smooth animations, responsive layout, modern typography (*Plus Jakarta Sans* & *Outfit*).
+   - Dual-mode navigation: desktop horizontal top bar and mobile slide-out drawer plus fixed native app bottom navigation bar.
+   - Fluid typography, touch-friendly 44px+ tap targets, and safe-area inset support for modern smartphones (iPhone and Android).
 
 2. **Leaf Classification:**
-   - Drag-and-drop or file picker for high-resolution images.
-   - Live camera snapshot feature using HTML5 MediaDevices.
-   - Quick one-click test sample gallery (Tulsi, Neem, Aloe Vera, Mint).
-   - Real-time prediction displaying Top-1 class, confidence score, and Top-5 breakdown meters.
+   - Drag-and-drop file picker for high-resolution images.
+   - Direct smartphone camera capture with autofocus and macro sensor support (`capture="environment"`), plus live webcam stream for desktop.
+   - Quick one-click test sample gallery (Tulsi, Neem, Betel, Doddpathre).
+   - Real-time prediction displaying Top-1 class, confidence score, and Top-5 breakdown meters with smooth mobile auto-scroll.
 
 3. **Dedicated Leaf Details Page (`/leaf/:id`):**
    - Scientific botanical classification and plant family.
@@ -64,9 +65,9 @@ The React development server runs at `http://localhost:5173`.
    - Parts used and safety/dosage guidelines.
 
 4. **80-Plant Encyclopedia (`/directory`):**
-   - Search by common, scientific, or regional names.
-   - Health category filters (Immunity & Fever, Digestion & Gut, Skin & Hair, Respiratory & Cold, Diabetes & Heart, General Wellness).
+   - Search by common, scientific, or regional names (with 16px minimum font size to prevent mobile auto-zoom).
+   - Horizontal swipeable health category filters (Immunity & Fever, Digestion & Gut, Skin & Hair, Respiratory & Cold, Diabetes & Heart, General Wellness).
 
-5. **Modern Keras Model (.keras):**
-   - Directly loads the native `model_1.keras` format (Keras 3 / TensorFlow 2.16+ compatible).
-   - Fast, self-contained single-file model without legacy deprecation warnings.
+5. **Client-Side TensorFlow.js WebGL Inference:**
+   - 100% private, serverless client-side AI inference running directly in the browser via WebGL.
+   - Sub-100ms classification with zero cloud latency and no external Python servers required.

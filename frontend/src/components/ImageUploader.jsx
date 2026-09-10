@@ -5,8 +5,13 @@ export default function ImageUploader({ onImageSelected, previewUrl, onClearPrev
   const [isDragOver, setIsDragOver] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const fileInputRef = useRef(null);
+  const nativeCameraInputRef = useRef(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+
+  const isTouchDevice = () => {
+    return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  };
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -35,7 +40,17 @@ export default function ImageUploader({ onImageSelected, previewUrl, onClearPrev
   };
 
   // Camera handling
-  const openCamera = async () => {
+  const handleCameraClick = () => {
+    // If mobile / touch device, prioritize high-res native camera app
+    if (isTouchDevice() && nativeCameraInputRef.current) {
+      nativeCameraInputRef.current.click();
+    } else {
+      // Desktop / laptop webcam stream modal
+      openWebcam();
+    }
+  };
+
+  const openWebcam = async () => {
     setIsCameraOpen(true);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -46,7 +61,8 @@ export default function ImageUploader({ onImageSelected, previewUrl, onClearPrev
       }
     } catch (err) {
       console.error("Camera access error:", err);
-      alert("Unable to access camera. Please allow camera permissions or upload an image file instead.");
+      // If webcam fails (e.g. desktop without webcam), fallback to file input
+      alert("Unable to access live webcam. You can upload a leaf photograph instead.");
       setIsCameraOpen(false);
     }
   };
@@ -87,27 +103,16 @@ export default function ImageUploader({ onImageSelected, previewUrl, onClearPrev
               className="btn-icon-sm"
               onClick={onClearPreview}
               title="Remove image and test another"
+              aria-label="Remove image"
               disabled={isAnalyzing}
             >
               <X size={18} />
             </button>
           </div>
           {isAnalyzing && (
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'rgba(6, 24, 17, 0.75)',
-              backdropFilter: 'blur(6px)',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '1rem',
-              color: '#34d399'
-            }}>
-              <Loader2 size={42} className="spin-animation" style={{ animation: 'spin 1.2s linear infinite' }} />
-              <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
-              <span style={{ fontWeight: 600, fontSize: '1.05rem', color: '#fff' }}>
+            <div className="analyzing-overlay">
+              <Loader2 size={44} className="spin-animation" />
+              <span className="analyzing-text">
                 Analyzing Leaf Features with AI...
               </span>
             </div>
@@ -121,6 +126,7 @@ export default function ImageUploader({ onImageSelected, previewUrl, onClearPrev
           onDrop={handleDrop}
           onClick={() => fileInputRef.current && fileInputRef.current.click()}
         >
+          {/* Standard File Input */}
           <input
             type="file"
             ref={fileInputRef}
@@ -129,58 +135,68 @@ export default function ImageUploader({ onImageSelected, previewUrl, onClearPrev
             style={{ display: 'none' }}
           />
 
+          {/* Native Smartphone Camera Input (Opens native camera app with autofocus) */}
+          <input
+            type="file"
+            ref={nativeCameraInputRef}
+            onChange={handleFileChange}
+            accept="image/*"
+            capture="environment"
+            style={{ display: 'none' }}
+          />
+
           <div className="dropzone-icon">
-            <Upload size={30} />
+            <Upload size={28} />
           </div>
 
-          <h3 className="dropzone-title">Upload or Drop Leaf Photo</h3>
-          <p className="dropzone-hint">Supports high-res JPG, PNG, or WEBP leaf images</p>
+          <h3 className="dropzone-title">Upload or Snap Leaf Photo</h3>
+          <p className="dropzone-hint">Clear, well-lit photo of single leaf or foliage</p>
 
           <div className="dropzone-actions" onClick={(e) => e.stopPropagation()}>
             <button
               type="button"
-              className="btn btn-primary"
+              className="btn btn-primary dropzone-btn"
               onClick={() => fileInputRef.current && fileInputRef.current.click()}
             >
               <ImageIcon size={18} />
-              <span>Browse File</span>
+              <span>Browse Photos</span>
             </button>
 
             <button
               type="button"
-              className="btn btn-outline"
-              onClick={openCamera}
+              className="btn btn-outline dropzone-btn"
+              onClick={handleCameraClick}
             >
               <Camera size={18} />
-              <span>Use Camera</span>
+              <span>Snap with Camera</span>
             </button>
           </div>
         </div>
       )}
 
-      {/* Hidden Canvas for Camera Snapshots */}
+      {/* Hidden Canvas for Live Webcam Snapshots */}
       <canvas ref={canvasRef} style={{ display: 'none' }} />
 
-      {/* Webcam Modal */}
+      {/* Live Webcam Stream Modal (for Desktop or WebCam) */}
       {isCameraOpen && (
-        <div className="modal-backdrop">
-          <div className="modal-content">
+        <div className="modal-backdrop" onClick={closeCamera}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h3 style={{ color: '#fff', fontSize: '1.2rem', fontWeight: 700 }}>Capture Leaf Photo</h3>
-              <button className="btn-icon-sm" onClick={closeCamera}>
+              <h3 style={{ color: '#fff', fontSize: '1.15rem', fontWeight: 700 }}>Live Leaf Camera</h3>
+              <button className="btn-icon-sm" onClick={closeCamera} aria-label="Close camera">
                 <X size={18} />
               </button>
             </div>
             
             <div className="modal-video-wrapper">
-              <video ref={videoRef} autoPlay playsInline className="modal-video" />
+              <video ref={videoRef} autoPlay playsInline muted className="modal-video" />
             </div>
 
             <div className="modal-actions">
-              <button className="btn btn-outline" onClick={closeCamera}>Cancel</button>
-              <button className="btn btn-primary" onClick={capturePhoto}>
+              <button type="button" className="btn btn-outline" onClick={closeCamera}>Cancel</button>
+              <button type="button" className="btn btn-primary" onClick={capturePhoto}>
                 <Camera size={18} />
-                <span>Snap Picture</span>
+                <span>Capture Leaf</span>
               </button>
             </div>
           </div>

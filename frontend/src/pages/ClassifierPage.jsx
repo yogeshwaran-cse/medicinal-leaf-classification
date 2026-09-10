@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ImageUploader from '../components/ImageUploader';
 import SampleGallery from '../components/SampleGallery';
 import PredictionResult from '../components/PredictionResult';
@@ -11,6 +11,7 @@ export default function ClassifierPage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [prediction, setPrediction] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const resultsRef = useRef(null);
 
   // Preload model on initial mount for zero-wait subsequent predictions
   useEffect(() => {
@@ -18,6 +19,15 @@ export default function ClassifierPage() {
       console.warn("Background model preload notice:", err);
     });
   }, []);
+
+  // Smooth scroll down to results on mobile/tablet screens when prediction arrives
+  useEffect(() => {
+    if (prediction && resultsRef.current && window.innerWidth <= 960) {
+      setTimeout(() => {
+        resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 200);
+    }
+  }, [prediction]);
 
   const handleImageSelected = async (file, customPreviewUrl = null) => {
     const preview = customPreviewUrl || URL.createObjectURL(file);
@@ -47,7 +57,7 @@ export default function ClassifierPage() {
   };
 
   return (
-    <main className="container">
+    <main className="container main-content-wrapper">
       {/* Hero Section */}
       <section className="hero-section">
         <div className="badge hero-pill">
@@ -64,7 +74,7 @@ export default function ClassifierPage() {
 
       {/* Main Classifier Area */}
       <section className={`classifier-grid ${prediction ? 'has-result' : ''}`}>
-        <div>
+        <div className="classifier-upload-col">
           <ImageUploader
             onImageSelected={handleImageSelected}
             previewUrl={previewUrl}
@@ -80,62 +90,51 @@ export default function ClassifierPage() {
           )}
 
           {errorMsg && (
-            <div style={{
-              marginTop: '1rem',
-              padding: '1rem',
-              borderRadius: 'var(--radius-md)',
-              background: 'rgba(239, 68, 68, 0.15)',
-              border: '1px solid rgba(239, 68, 68, 0.3)',
-              color: '#fca5a5',
-              fontSize: '0.9rem'
-            }}>
+            <div className="error-banner">
               {errorMsg}
             </div>
           )}
         </div>
 
         {prediction && (
-          <PredictionResult
-            result={prediction}
-            onReset={handleClear}
-          />
+          <div ref={resultsRef} className="classifier-result-col">
+            <PredictionResult
+              result={prediction}
+              onReset={handleClear}
+            />
+          </div>
         )}
       </section>
 
       {/* Feature Highlights */}
       {!prediction && (
-        <section style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-          gap: '1.5rem',
-          margin: '2rem 0 4rem'
-        }}>
-          <div className="glass-card" style={{ padding: '1.75rem' }}>
-            <div className="dropzone-icon" style={{ width: '48px', height: '48px', margin: '0 0 1rem 0' }}>
+        <section className="features-highlights-grid">
+          <div className="glass-card feature-highlight-card">
+            <div className="dropzone-icon feature-icon">
               <Zap size={22} />
             </div>
-            <h3 style={{ fontSize: '1.15rem', marginBottom: '0.5rem' }}>MobileNetV2 Vision</h3>
-            <p style={{ color: 'var(--text-dim)', fontSize: '0.9rem', lineHeight: 1.6 }}>
+            <h3 className="feature-card-title">MobileNetV2 Vision</h3>
+            <p className="feature-card-desc">
               Fine-tuned deep convolutional neural network trained on thousands of authentic Indian medicinal leaf specimens.
             </p>
           </div>
 
-          <div className="glass-card" style={{ padding: '1.75rem' }}>
-            <div className="dropzone-icon" style={{ width: '48px', height: '48px', margin: '0 0 1rem 0' }}>
+          <div className="glass-card feature-highlight-card">
+            <div className="dropzone-icon feature-icon">
               <BookOpen size={22} />
             </div>
-            <h3 style={{ fontSize: '1.15rem', marginBottom: '0.5rem' }}>80 Medicinal Species</h3>
-            <p style={{ color: 'var(--text-dim)', fontSize: '0.9rem', lineHeight: 1.6 }}>
-              Comprehensive Ayurvedic encyclopedia covering Tulsi, Neem, Giloy, Ashoka, Brahmi, Doddapathre, and 74 more.
+            <h3 className="feature-card-title">80 Medicinal Species</h3>
+            <p className="feature-card-desc">
+              Comprehensive Ayurvedic encyclopedia covering Tulsi, Neem, Giloy, Ashoka, Brahmi, Doddpathre, and 74 more.
             </p>
           </div>
 
-          <div className="glass-card" style={{ padding: '1.75rem' }}>
-            <div className="dropzone-icon" style={{ width: '48px', height: '48px', margin: '0 0 1rem 0' }}>
+          <div className="glass-card feature-highlight-card">
+            <div className="dropzone-icon feature-icon">
               <ShieldCheck size={22} />
             </div>
-            <h3 style={{ fontSize: '1.15rem', marginBottom: '0.5rem' }}>Remedies & Remedies</h3>
-            <p style={{ color: 'var(--text-dim)', fontSize: '0.9rem', lineHeight: 1.6 }}>
+            <h3 className="feature-card-title">Remedies & Preparations</h3>
+            <p className="feature-card-desc">
               Step-by-step preparation guides (Kashayam, herbal oils, leaf pastes, teas) with dosage guidelines and contraindications.
             </p>
           </div>
