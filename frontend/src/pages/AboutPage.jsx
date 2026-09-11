@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Cpu, Database, Award, ShieldCheck, HeartHandshake } from 'lucide-react';
+import { Cpu, Database, Award, ShieldCheck, HeartHandshake, ExternalLink, Zap } from 'lucide-react';
 
 export default function AboutPage() {
   useEffect(() => {
@@ -59,11 +59,41 @@ export default function AboutPage() {
         </p>
       </div>
 
-      {/* Model Format & Serving */}
+      {/* Dataset & Attribution Card */}
       <div className="about-card glass-card">
         <div className="about-card-header">
           <div className="about-icon-wrapper">
             <Database size={28} />
+          </div>
+          <h3 className="about-section-title">
+            Dataset & Kaggle Attribution
+          </h3>
+        </div>
+        <p className="about-text">
+          This project was trained using the <strong>Indian Medicinal Leaves Dataset</strong> curated and published by <strong>Arya Shah</strong> on Kaggle. The dataset contains thousands of authentic leaf photographs spanning <strong>80 distinct medicinal plant species</strong> widely recognized and used in traditional Indian medicine and Ayurveda.
+        </p>
+        <p className="about-text">
+          We gratefully acknowledge Arya Shah and the open-source botanical & machine learning community for providing this valuable dataset, which made the training of this MobileNetV2 computer vision model possible.
+        </p>
+        <div style={{ marginTop: '1.25rem' }}>
+          <a
+            href="https://www.kaggle.com/datasets/aryashah2k/indian-medicinal-leaves-dataset"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-primary"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}
+          >
+            <span>Indian Medicinal Leaves Dataset on Kaggle</span>
+            <ExternalLink size={16} />
+          </a>
+        </div>
+      </div>
+
+      {/* Model Format & Serving */}
+      <div className="about-card glass-card">
+        <div className="about-card-header">
+          <div className="about-icon-wrapper">
+            <Zap size={28} />
           </div>
           <h3 className="about-section-title">
             Model Packaging & Client-Side Inference: TensorFlow.js (WebGL)

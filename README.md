@@ -71,3 +71,15 @@ The React development server runs at `http://localhost:5173`.
 5. **Client-Side TensorFlow.js WebGL Inference:**
    - 100% private, serverless client-side AI inference running directly in the browser via WebGL.
    - Sub-100ms classification with zero cloud latency and no external Python servers required.
+
+---
+
+## Dataset & Attribution
+
+This project is trained on the authentic **[Indian Medicinal Leaves Dataset](https://www.kaggle.com/datasets/aryashah2k/indian-medicinal-leaves-dataset)** created and shared by **Arya Shah** on Kaggle.
+
+- **Dataset URL:** [https://www.kaggle.com/datasets/aryashah2k/indian-medicinal-leaves-dataset](https://www.kaggle.com/datasets/aryashah2k/indian-medicinal-leaves-dataset)
+- **Dataset Creator:** [Arya Shah](https://www.kaggle.com/aryashah2k)
+- **Scope & Highlights:** Thousands of botanical leaf images covering 80 distinct medicinal plant species commonly used across Indian Ayurvedic, Siddha, and traditional herbal medicine systems.
+- **Model Training:** MobileNetV2 transfer learning architecture fine-tuned with 224&times;224 RGB input resolution, reaching high multi-class accuracy across all 80 species.
+

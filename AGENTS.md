@@ -417,6 +417,25 @@ The goal of this project was to transform a deep learning research notebook (`Tr
 
 ---
 
+### Phase 25: Dataset Credits & Kaggle Attribution
+- **User Prompt:**
+  > *"add credits for dataset that i use in this project https://www.kaggle.com/datasets/aryashah2k/indian-medicinal-leaves-dataset"*
+- **Actions Taken:**
+  - **About Page Attribution (`AboutPage.jsx`):**
+    - Added a prominent `Dataset & Kaggle Attribution` glassmorphic card featuring dataset information, author attribution (**Arya Shah**), and a direct button linking to `https://www.kaggle.com/datasets/aryashah2k/indian-medicinal-leaves-dataset` with an external link indicator.
+    - Updated section icons to `Cpu` (Model), `Database` (Dataset), `Zap` (WebGL serving), and `HeartHandshake` (Ayurvedic knowledge).
+  - **Global Footer Attribution (`Footer.jsx` & `App.css`):**
+    - Added a dedicated 4th column in `.footer-grid` for **Dataset & Credits** linking directly to the Kaggle dataset by Arya Shah.
+    - Added dataset attribution in `.footer-bottom` alongside the copyright and mission note.
+    - Updated CSS responsive rules for `.footer-grid` to elegantly handle 4 columns on desktop, 2 columns on tablets (≤ 960px), and 1 column on mobile devices (≤ 640px).
+  - **Encyclopedia Header Attribution (`EncyclopediaPage.jsx`):**
+    - Added a subtle dataset credit link and badge in the hero description of the 80-Herb Encyclopedia, clarifying the source botanical collection.
+  - **Project Documentation (`README.md`):**
+    - Added a dedicated `## Dataset & Attribution` section linking the dataset and author Arya Shah, detailing the scope of 80 medicinal plant species.
+  - Rebuilt production bundle with `npm run build` (exit code 0).
+
+---
+
 ## 3. Current Directory Structure
 
 ```

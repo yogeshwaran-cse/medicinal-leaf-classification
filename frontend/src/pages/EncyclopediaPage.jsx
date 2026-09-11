@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, X, BookOpen, Filter } from 'lucide-react';
+import { Search, X, BookOpen, Filter, ExternalLink } from 'lucide-react';
 import LeafCard from '../components/LeafCard';
 import staticLeavesRaw from '../data/leaves.json';
 
@@ -50,6 +50,19 @@ export default function EncyclopediaPage() {
         <p className="hero-description">
           Explore all 80 verified botanical species alongside their scientific and botanical nomenclature, health benefits, and traditional Ayurvedic remedies.
         </p>
+        <div style={{ marginTop: '0.85rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap', fontSize: '0.85rem', color: 'var(--text-dim)' }}>
+          <span>Dataset source:</span>
+          <a
+            href="https://www.kaggle.com/datasets/aryashah2k/indian-medicinal-leaves-dataset"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: '#34d399', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.25rem', fontWeight: 500 }}
+          >
+            <span>Indian Medicinal Leaves Dataset (Kaggle)</span>
+            <ExternalLink size={13} />
+          </a>
+          <span>by Arya Shah</span>
+        </div>
       </div>
 
       {/* Search & Filter Controls */}

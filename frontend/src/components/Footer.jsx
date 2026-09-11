@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Leaf, Heart } from 'lucide-react';
+import { Leaf, ExternalLink } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -31,6 +31,24 @@ export default function Footer() {
           </div>
 
           <div>
+            <h4 style={{ color: '#fff', fontSize: '0.92rem', marginBottom: '0.85rem' }}>Dataset & Credits</h4>
+            <p style={{ fontSize: '0.82rem', color: 'var(--text-dim)', lineHeight: 1.6, marginBottom: '0.65rem' }}>
+              Trained on the <a
+                href="https://www.kaggle.com/datasets/aryashah2k/indian-medicinal-leaves-dataset"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#34d399', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.2rem', fontWeight: 500 }}
+              >
+                <span>Indian Medicinal Leaves Dataset</span>
+                <ExternalLink size={12} />
+              </a> by Arya Shah on Kaggle.
+            </p>
+            <p style={{ fontSize: '0.80rem', color: 'var(--text-dim)', lineHeight: 1.5 }}>
+              Covering 80 species with thousands of botanical photographs.
+            </p>
+          </div>
+
+          <div>
             <h4 style={{ color: '#fff', fontSize: '0.92rem', marginBottom: '0.85rem' }}>Herbal Safety</h4>
             <p style={{ fontSize: '0.82rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
               Information provided is for educational and identification purposes. Consult certified Ayurvedic doctors or medical practitioners before beginning medicinal herbal remedies.
@@ -41,7 +59,7 @@ export default function Footer() {
         <div className="footer-bottom">
           <span>&copy; {new Date().getFullYear()} AyurLeaf AI &bull; Indian Medicinal Flora Classification</span>
           <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-            Preserving Ayurvedic Wisdom with Deep Learning
+            Dataset: Arya Shah (Kaggle) &bull; Preserving Ayurvedic Wisdom
           </span>
         </div>
       </div>
