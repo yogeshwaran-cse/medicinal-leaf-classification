@@ -436,6 +436,60 @@ The goal of this project was to transform a deep learning research notebook (`Tr
 
 ---
 
+### Phase 26: Standalone Model Evaluation & Comprehensive Performance Metrics Notebook (`Evaluate_Metrics.ipynb`)
+- **User Prompt:**
+  > *"want to test the metrics in seperate ipynb file"*
+- **Rationale & Objectives:**
+  - Separate training and hyperparameter search (`Training.ipynb`) from rigorous, publication-grade model evaluation, diagnostics, and metric reporting.
+  - Provide a modular, standalone Jupyter Notebook (`Evaluate_Metrics.ipynb`) testing the trained `saved_models/model_1.keras` across multiple statistical dimensions without modifying or re-running the training pipeline.
+- **Actions Taken:**
+  - **Environment Dependencies (`uv`):**
+    - Installed `scikit-learn` (v1.9.1) and `seaborn` (v0.13.2) in `.venv` via `uv pip install scikit-learn seaborn`.
+  - **Created `Evaluate_Metrics.ipynb`:**
+    - **Cell 1: Environment & Setup:** Verifies Python, TensorFlow 2.21, Keras 3.15, scikit-learn, and compute device (GPU/CPU).
+    - **Cell 2: Configuration & Hyperparameters:** Configurable `MODEL_PATH`, `DATASET_PATH` (`'Medicinal Leaf dataset'`), `IMAGE_SIZE = 224`, `BATCH_SIZE = 32`, and output directory `evaluation_results/`.
+    - **Cell 3: Model Architecture Verification:** Loads `saved_models/model_1.keras` and compiles it with Sparse Categorical Crossentropy for evaluation.
+    - **Cell 4: Test Split Extraction:** Replicates the exact 10% test split from `Training.ipynb` using `seed=14` and `shuffle_size=10000`, with automatic fallback to reference encyclopedia labels (`leaves.json`).
+    - **Cell 5: Built-in Evaluation:** Evaluates test cross-entropy loss and top-1 accuracy via `model.evaluate(test_ds)`.
+    - **Cell 6: Batch Inference & Latency Benchmarking:** Gathers predictions, ground truth, softmax probabilities, and benchmarks inference latency (ms/image) and throughput (FPS).
+    - **Cell 7: Summary Metrics:** Computes Top-1 Accuracy, Top-5 Categorical Accuracy, and Macro / Weighted Precision, Recall, and F1-Score.
+    - **Cell 8: Per-Class Classification Report:** Generates full Scikit-Learn classification report for all 80 Indian medicinal leaf classes, sorting and ranking the Top 10 best-performing vs 10 most challenging species.
+    - **Cell 9: Bar Chart Visualizations:** Generates dual horizontal bar charts showing F1-scores for top 10 and bottom 10 species.
+    - **Cell 10: Confusion Matrix & Heatmap:** Calculates normalized confusion matrix and visualizes high-resolution Seaborn heatmap; automatically identifies and tabulates top confused leaf pairs (morphological overlap analysis).
+    - **Cell 11: Prediction Confidence & Calibration Analysis:** Plots KDE density distribution of softmax prediction confidences for correct vs misclassified samples.
+    - **Cell 12: Qualitative Sample Prediction Grid:** Plots sample test images with color-coded borders (Green for Correct, Red for Misclassified), confidence percentages, and botanical names.
+    - **Cell 13: Export Artifacts:** Exports summary metrics (`model_metrics_summary.csv`), complete 80-class report (`classification_report_all_classes.csv`), and figures to `evaluation_results/`.
+  - **Compatibility & Verification:**
+    - Built safe ASCII-compatible console logging preventing Windows terminal `charmap` codec errors.
+    - Verified all 13 code cells run headlessly without errors.
+    - Updated `README.md` and `AGENTS.md`.
+
+---
+
+### Phase 27: Full Dataset Evaluation Execution & README Performance Benchmark Documentation
+- **User Prompt:**
+  > *"I evaluate the dataset with the @[c:\project folder\Medicinal Leaf Classification\Evaluate_Metrics.ipynb], summary it and update in readme file"*
+- **Actions Taken:**
+  - **Analyzed Full Test Split Benchmark Results (`evaluation_results/`):**
+    - Evaluated 672 unseen test images (21 batches of 32 images) across all 80 Indian medicinal leaf classes.
+    - **Top-1 Accuracy:** **89.43%**
+    - **Top-5 Categorical Accuracy:** **99.11%** (in 99.11% of cases, the correct medicinal plant is within the top-5 recommendations).
+    - **Test Cross-Entropy Loss:** **0.3482**
+    - **Macro-Averaged:** Precision **91.34%**, Recall **90.74%**, F1-Score **89.59%**.
+    - **Weighted-Averaged:** Precision **92.67%**, Recall **89.43%**, F1-Score **89.75%**.
+    - **Inference Latency:** 13.44 ms per image (74.4 images/second throughput on CPU).
+  - **Species Performance Breakdown:**
+    - 24 species achieved a flawless **100% F1-Score** (e.g. Balloon Vine, Bamboo, Castor, Chakte, Drumstick, Ekka, Eucalyptus, Ganigale, Honge, Jasmine, Kambajala, Lemongrass, Malabar Spinach, Mango, Marigold).
+    - 24 species achieved **90%–99% F1-Score**.
+    - 20 species achieved **80%–89% F1-Score**.
+    - Only 12 species had F1-Scores <80% due to closely overlapping leaf morphology (e.g. *Seethapala*, *Kamakasturi*, *Citron lime*).
+  - **Updated `README.md`:**
+    - Added dedicated section `## Model Evaluation & Performance Benchmark Results`.
+    - Documented comprehensive metrics summary table, performance tier distribution, morphological error analysis, and artifact links.
+
+
+---
+
 ## 3. Current Directory Structure
 
 ```
@@ -449,6 +503,8 @@ Medicinal Leaf Classification/
 ├── convert_model_to_tfjs.py            # Keras to TensorFlow.js graph model converter
 ├── saved_models/                       # Trained model directory
 │   └── model_1.keras                   # Native modern Keras model (active, 10.85 MB)
+├── Evaluate_Metrics.ipynb              # Standalone model evaluation notebook (metrics, reports, confusion matrix)
+├── evaluation_results/                 # Exported metrics summaries, per-class reports, and high-res plots
 ├── vercel.json                         # Vercel deployment configuration
 └── frontend/                           # React client application (Vite + Vanilla CSS)
     ├── dist/                           # Compiled production SPA bundle

@@ -22,6 +22,9 @@ yarn-error.log*
 
 # Datasets & Heavy Files
 Medicinal Leaf dataset/
+Indian Medicinal Leaves Image Datasets/
+Indian Medicinal Leaves Dataset/
+evaluation_results/
 *.tar.gz
 *.zip
 
@@ -35,3 +38,6 @@ Thumbs.db
 *.swp
 *.swo
 .idea/
+
+.vscode/
+Indian Medicinal Leaves Dataset/
